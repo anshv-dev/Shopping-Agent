@@ -16,7 +16,13 @@ load_dotenv()
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "store.db")
 
-llm = ChatGroq(model="qwen/qwen3-32b", temperature=0)
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0)
+vision_llm = ChatGroq(model="qwen/qwen3.6-27b", temperature=0)
+
+
+# ---------------------------------------------------------------------------
+# Tools
+# ---------------------------------------------------------------------------
 
 @tool
 def search_products(query: str, max_price: Optional[float] = None, is_organic: Optional[bool] = None) -> str:
@@ -62,6 +68,7 @@ def search_products(query: str, max_price: Optional[float] = None, is_organic: O
     ]
     return json.dumps(products)
 
+
 @tool
 def get_rating(product_id: int) -> str:
     """
@@ -102,15 +109,54 @@ def checkout(product_id: int) -> str:
     )
 
 
+@tool
+def describe_product_image(image_path: str) -> str:
+    """
+    Analyze a product image and return its key attributes as a JSON object.
+    Use this when the user uploads a photo of a product they are interested in.
+    The returned attributes can be used directly with search_products.
+    """
+    with open(image_path, "rb") as f:
+        image_data = base64.b64encode(f.read()).decode()
+
+    ext = os.path.splitext(image_path)[1].lower().lstrip(".")
+    mime = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
+
+    message = HumanMessage(content=[
+        {
+            "type": "image_url",
+            "image_url": {"url": f"data:{mime};base64,{image_data}"},
+        },
+        {
+            "type": "text",
+            "text": (
+                "Look at this product image and extract its key attributes. "
+                "Return ONLY a JSON object with these fields:\n"
+                "- product_type: what kind of product it is (e.g. honey, olive oil, almonds)\n"
+                "- search_query: a short keyword to search for it (e.g. 'honey', 'olive oil')\n"
+                "- is_organic: true if the label says organic, false if not, null if unclear\n"
+                "- description: one sentence describing the product"
+            ),
+        },
+    ])
+
+    response = vision_llm.invoke([message])
+    return response.content
+
+
 # ---------------------------------------------------------------------------
 # Agent
 # ---------------------------------------------------------------------------
 
 agent = create_agent(
-    tools=[search_products, get_rating, checkout],
+    tools=[search_products, get_rating, checkout, describe_product_image],
     model=llm,
     system_prompt=(
         "You are a helpful shopping assistant. Follow these rules strictly.\n\n"
+        "IMAGE SEARCH — when the user provides an image path:\n"
+        "1. Call describe_product_image with the path to identify the product.\n"
+        "2. Use the returned search_query and is_organic to call search_products.\n"
+        "3. Continue with the BROWSING flow from step 2 onwards.\n\n"
         "BROWSING — when the user describes what they want to buy:\n"
         "1. Call search_products to find matching items (apply any price/organic filters given).\n"
         "2. For each candidate, call get_rating to retrieve its average rating.\n"
@@ -133,9 +179,6 @@ agent = create_agent(
         "Never guess a product_id — always take it from the (ID:X) in your own previous message."
     ),
 )
-
-
-
 
 if __name__ == "__main__":
     result = agent.invoke(

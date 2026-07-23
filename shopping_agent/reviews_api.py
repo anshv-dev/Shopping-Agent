@@ -24,6 +24,7 @@ def get_product_rating(product_id: int) -> dict:
     count = row[1] if row else 0
     return {"product_id": product_id, "average_rating": avg, "review_count": count}
 
+
 def get_ratings_for_products(product_ids: list[int]) -> list[dict]:
     """Return ratings for a list of product IDs."""
     if not product_ids:
@@ -53,9 +54,10 @@ def get_ratings_for_products(product_ids: list[int]) -> list[dict]:
         for pid in product_ids
     ]
 
+
 if __name__ == "__main__":
     # Single product
-    result = get_product_rating(4)
+    result = get_product_rating(1)
     print("Single product rating:")
     print(f"  Product {result['product_id']}: {result['average_rating']} stars ({result['review_count']} reviews)")
 
