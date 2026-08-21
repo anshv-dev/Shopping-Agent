@@ -161,8 +161,6 @@ Example:
 GOOGLE_API_KEY=your_google_api_key
 GROQ_API_KEY=your_groq_api_key
 LANGSMITH_API_KEY=your_langsmith_api_key
-LANGSMITH_TRACING=true
-LANGSMITH_PROJECT=Rufus-Agent
 ```
 
 Depending on your implementation, you may only need some of these variables.
