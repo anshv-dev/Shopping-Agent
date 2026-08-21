@@ -35,7 +35,7 @@ Here are some screenshots of Rufus Agent in action.
 
 ### 🏠 Shopping Assistant
 
-![Rufus Agent Home](./images/demo-home.png)
+![Rufus Agent Home](https://github.com/anshv-dev/Shopping-Agent/blob/4c14a80de071668328517fdcce52f68571401b84/Screenshot%202026-07-22%20124906.png)
 
 ### 🔎 Product Search & Recommendations
 
