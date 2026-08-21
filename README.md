@@ -39,7 +39,7 @@ Here are some screenshots of Rufus Agent in action.
 
 ### 🔎 Product Search & Recommendations
 
-![Product Recommendations](./images/shopping-result.png)
+![Product Recommendations](https://github.com/anshv-dev/Shopping-Agent/blob/3e77ef4cb2980e606d8febfd52f287f5fd70d9c8/Screenshot%202026-07-22%20125157.png)
 
 ### 🤖 AI Agent Response
 
