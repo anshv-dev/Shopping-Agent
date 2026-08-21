@@ -1,4 +1,4 @@
-# Rufus Agent 🛒
+# Shopping Agent 🛒
 
 Rufus Agent is an **AI-powered shopping assistant** inspired by Amazon Rufus. The project applies concepts from **Generative AI and Agentic AI** to create an assistant that can understand a user's shopping requirements, retrieve relevant information, and help with product-related decisions.
 
