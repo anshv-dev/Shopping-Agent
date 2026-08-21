@@ -43,7 +43,7 @@ Here are some screenshots of Rufus Agent in action.
 
 ### 🤖 AI Agent Response
 
-![Agent Response](./images/agent-response.png)
+![Agent Response](https://github.com/anshv-dev/Shopping-Agent/blob/0211a264b07759971d9c536a2456adbb8034f1fa/Screenshot%202026-07-22%20125546.png)
 
 ---
 
